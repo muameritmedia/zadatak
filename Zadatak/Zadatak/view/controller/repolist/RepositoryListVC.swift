@@ -92,10 +92,9 @@ class RepositoryListVC: UIViewController {
     @objc func segmentedValueChanged(_ sender:UISegmentedControl!) {
         repositoryListViewModel.sort = sortingOptions[sender.selectedSegmentIndex].lowercased()
         
-        repositoryListViewModel.repositoryList.removeAll()
-        repositoryListViewModel.page = 1
+        resetFetch()
+        
         fetchFilteredRepositorys()
-        print("Selected Segment Index is : \(repositoryListViewModel.sort)")
     }
     
     @objc func searchFieldDidChange(_ textField: UITextField) {
@@ -104,21 +103,26 @@ class RepositoryListVC: UIViewController {
         
         repositoryListViewModel.searchString = string
         
-        repositoryListViewModel.repositoryList.removeAll()
-        repositoryListViewModel.page = 1
-        
+ 
         
         segmentedControlSort.isHidden = !(string.count > 2)
         
         if string.count > 2 {
+            resetFetch()
             fetchFilteredRepositorys()
             
         } else if string.isEmpty {
             
+            resetFetch()
             fetchRepositorys()
             
         }
         
+    }
+    
+    private func resetFetch() {
+        repositoryListViewModel.page = 1
+        tableViewRepositories.reloadData()
     }
     
     
